@@ -2,9 +2,43 @@ import React from 'react'
 import {AppBar, Toolbar, Typography, makeStyles, IconButton, Button} from '@material-ui/core'
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import MenuIcon from '@material-ui/icons/Menu';
-
+import MenuBookIcon from '@material-ui/icons/MenuBook';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
+import { withStyles } from '@material-ui/core/styles';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+
+const StyledMenu = withStyles({
+    paper: {
+      border: '1px solid #d3d4d5',
+    },
+  })((props) => (
+    <Menu
+      elevation={0}
+      getContentAnchorEl={null}
+      anchorOrigin={{
+        vertical: 'bottom',
+        horizontal: 'center',
+      }}
+      transformOrigin={{
+        vertical: 'top',
+        horizontal: 'center',
+      }}
+      {...props}
+    />
+  ));
+  
+  const StyledMenuItem = withStyles((theme) => ({
+    root: {
+      '&:focus': {
+        backgroundColor: theme.palette.primary.main,
+        '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
+          color: theme.palette.common.white,
+        },
+      },
+    },
+  }))(MenuItem);
 
 
 
@@ -21,7 +55,8 @@ const useStyles = makeStyles(theme => ({
         // },
     },
     title:{
-        flexGrow: 1
+        flexGrow: 1,
+        marginLeft:10
     },
     // appBar: {
     //     [theme.breakpoints.up('sm')]: {
@@ -36,6 +71,7 @@ const useStyles = makeStyles(theme => ({
 
 const Navbar = (props) => {
 
+
     const [anchorEl, setAnchorEl] = React.useState(null);
 
     const handleClick = (event) => {
@@ -46,6 +82,7 @@ const Navbar = (props) => {
       setAnchorEl(null);
     };
 
+
     const classes = useStyles()
     return (
         <div>
@@ -55,22 +92,41 @@ const Navbar = (props) => {
                
 
                 <div>
-      <IconButton color="inherit" aria-label="menu" aria-controls="simple-menu" className={classes.menuButton} aria-haspopup="true" onClick={handleClick}>
+                <Button
+        aria-controls="customized-menu"
+        aria-haspopup="true"
+        variant="contained"
+        color="primary"
+        onClick={handleClick}
+      >
         <MenuIcon/>
-      </IconButton>
-      <Menu
-        id="simple-menu"
+      </Button>
+      <StyledMenu
+        id="customized-menu"
         anchorEl={anchorEl}
         keepMounted
         open={Boolean(anchorEl)}
         onClose={handleClose}
-        className= {classes.menuDrop}
-        bgcolor="primary.main"
       >
-        <MenuItem onClick={handleClose} bgcolor="primary.main">Best sellers</MenuItem>
-        <MenuItem onClick={handleClose}>New releases</MenuItem>
-        <MenuItem onClick={handleClose}>Coming soon</MenuItem>
-      </Menu>
+        <StyledMenuItem>
+          <ListItemIcon>
+          <MenuBookIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText primary="Best sellers" />
+        </StyledMenuItem>
+        <StyledMenuItem>
+          <ListItemIcon>
+          <MenuBookIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText primary="New releases" />
+        </StyledMenuItem>
+        <StyledMenuItem>
+          <ListItemIcon>
+          <MenuBookIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText primary="Coming soon" />
+        </StyledMenuItem>
+      </StyledMenu>
     </div>
                 
 
