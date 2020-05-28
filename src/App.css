@@ -1,0 +1,20 @@
+.slide1{
+  background-image: url(./images/slide1.jpg);
+  background-position: center;
+  background-size: cover;
+}
+
+.slide2{
+  background-image: url(./images/slide2.jpg);
+  background-position: center;
+  background-size: cover;
+}
+
+.text-container{
+  margin:0;
+  margin-top:40px;
+  
+  width:60%;
+}
+
+.slick-slide {outline: none;}
