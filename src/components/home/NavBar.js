@@ -3,6 +3,11 @@ import {AppBar, Toolbar, Typography, makeStyles, IconButton, Button} from '@mate
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import MenuIcon from '@material-ui/icons/Menu';
 
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+
+
+
 const useStyles = makeStyles(theme => ({
 
    
@@ -24,23 +29,49 @@ const useStyles = makeStyles(theme => ({
     //         marginLeft: 240,
     //     },
     // },
+    // menuDrop:{
+    //     backgroundColor:primary
+    // }
 }))
 
 const Navbar = (props) => {
+
+    const [anchorEl, setAnchorEl] = React.useState(null);
+
+    const handleClick = (event) => {
+      setAnchorEl(event.currentTarget);
+    };
+  
+    const handleClose = () => {
+      setAnchorEl(null);
+    };
+
     const classes = useStyles()
     return (
         <div>
 
         <AppBar className={classes.appBar}>
             <Toolbar>
-                <IconButton 
-                    color="inherit" 
-                    aria-label="menu" 
-                    className={classes.menuButton}
-                    onClick={() => props.accionAbrir()}
-                >
-                    <MenuIcon />
-                </IconButton>
+               
+
+                <div>
+      <IconButton color="inherit" aria-label="menu" aria-controls="simple-menu" className={classes.menuButton} aria-haspopup="true" onClick={handleClick}>
+        <MenuIcon/>
+      </IconButton>
+      <Menu
+        id="simple-menu"
+        anchorEl={anchorEl}
+        keepMounted
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+        className= {classes.menuDrop}
+        bgcolor="primary.main"
+      >
+        <MenuItem onClick={handleClose} bgcolor="primary.main">Best sellers</MenuItem>
+        <MenuItem onClick={handleClose}>New releases</MenuItem>
+        <MenuItem onClick={handleClose}>Coming soon</MenuItem>
+      </Menu>
+    </div>
                 
 
                 <Typography variant='h6' className={classes.title}>
