@@ -1,5 +1,5 @@
 import React from 'react'
-import {AppBar, Toolbar, Typography, makeStyles, IconButton, Button} from '@material-ui/core'
+import {AppBar, Toolbar, Typography, makeStyles, IconButton, Button, TextField} from '@material-ui/core'
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import MenuIcon from '@material-ui/icons/Menu';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
@@ -55,9 +55,23 @@ const useStyles = makeStyles(theme => ({
         // },
     },
     title:{
-        flexGrow: 1,
-        marginLeft:10
+        
+        marginLeft:20,
+        marginRight:20
     },
+
+    textFieldContainer:{
+      flexGrow: 1,
+      margin:10
+  },
+
+  textFieldSearch:{
+    width:'50%',
+    margin:10,
+    backgroundColor:'white',
+    borderRadius: 10,
+    padding:5
+},
     // appBar: {
     //     [theme.breakpoints.up('sm')]: {
     //         width: `calc(100% - ${240}px)`,
@@ -133,6 +147,16 @@ const Navbar = (props) => {
                 <Typography variant='h6' className={classes.title}>
                     BookShop
                 </Typography>
+                <div className= {classes.textFieldContainer}>
+                <TextField
+                    // value={searchText}
+                    placeholder="Buscar..."
+                    // onChange={handleSearchTextChange}
+                    margin="normal"
+                    className={classes.textFieldSearch}
+                />
+                </div>
+
                 <Button variant="text" color="inherit">
                     Login
                 </Button>
