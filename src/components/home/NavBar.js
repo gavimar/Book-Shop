@@ -9,6 +9,14 @@ import { withStyles } from '@material-ui/core/styles';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 
+import {useDispatch, useSelector} from 'react-redux'
+import { getBookAction,  nextBookAction} from '../../redux/bookDucks'
+
+
+import InputAdornment from "@material-ui/core/InputAdornment";
+import SearchIcon from "@material-ui/icons/Search";
+
+
 const StyledMenu = withStyles({
     paper: {
       border: '1px solid #d3d4d5',
@@ -96,6 +104,10 @@ const Navbar = (props) => {
       setAnchorEl(null);
     };
 
+    const dispatch = useDispatch()
+    // const books = useSelector(store => store.books.array)
+
+
 
     const classes = useStyles()
     return (
@@ -154,11 +166,21 @@ const Navbar = (props) => {
                     // onChange={handleSearchTextChange}
                     margin="normal"
                     className={classes.textFieldSearch}
+
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment>
+                          <IconButton>
+                            <SearchIcon onClick={() => dispatch(getBookAction())} />
+                          </IconButton>
+                        </InputAdornment>
+                      )
+                    }}
                 />
                 </div>
+               
 
                 <Button variant="text" color="inherit">
-                    Login
                 </Button>
                 <Button variant="text" color="inherit">
                     <ShoppingCartIcon/>

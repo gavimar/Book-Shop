@@ -39,7 +39,7 @@ export const getBookAction = () => async (dispatch, getState) => {
     }
 }
 
-export const siguientePokemonAccion = (numero) => async (dispatch, getState) => {
+export const nextBookAction = (numero) => async (dispatch, getState) => {
 
     // primera alternativa
     const offset = getState().books.offset
@@ -50,7 +50,7 @@ export const siguientePokemonAccion = (numero) => async (dispatch, getState) => 
         dispatch({
             type: NEXT_BOOK_SUCCESS,
             payload: {
-                array: res.data.results,
+                array: res.data.items,
                 offset: siguiente
             }
         })

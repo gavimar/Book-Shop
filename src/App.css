@@ -18,3 +18,14 @@
 }
 
 .slick-slide {outline: none;}
+
+/* .text-slides{
+
+  font-size: 14px;
+
+  @media all and (min-width:$tablet){
+    height: 400px;
+  width: 600px;
+  }
+} */
+

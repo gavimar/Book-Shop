@@ -68,7 +68,7 @@ const Slides = () => {
              
                       <div className="swiper-slide slide1">
                         <div className="text-container">
-                      <Typography variant='h4' className={classes.advert} color="primary" align="center">
+                      <Typography variant='h4' className={`text-slides ${classes.advert }`} color="primary" align="center">
                        Best sellers <br></br> this summer</Typography>
                        </div>
                         

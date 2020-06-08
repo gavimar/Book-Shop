@@ -6,7 +6,7 @@ import {
     Divider
 } from '@material-ui/core'
 
-const estilos = makeStyles(theme => ({
+const styles = makeStyles(theme => ({
     drawer: {
         width: 240,
         flexShrink: 0,
@@ -19,7 +19,7 @@ const estilos = makeStyles(theme => ({
 
 const Menu = (props) => {
 
-    const classes = estilos()
+    const classes = styles()
 
     return (
         <Drawer
