@@ -1,0 +1,175 @@
+import React, {useEffect, useState} from 'react';
+import Skeleton from 'react-loading-skeleton';
+import PropTypes from 'prop-types';
+import { DynamicTable, Pagination } from 'workflowskit';
+import ReportCell from '../ReportCell';
+import Filter from './Filter'
+import { autoResize, dropListAutoResize} from '../../common/lib/util';
+import {getData} from '../lib/index';
+import { translate } from '../../i18n';
+import css from './index.css';
+
+const DocumentActions = ({t}) => {
+
+const [data, setData] = useState([]);
+const [totalItems, setTotalItems] = useState();
+const [rowsPerPage, setRowsPerPage] = useState();
+const [page, setPage] = useState();
+const [isLoading, setIsLoading] = useState(true);
+const [dropDownMenuContainer, setDropDownMenuContainer] = useState(null);
+
+    useEffect(() => {
+        getData().then(({documentActions, totalSize, limit, start}) => {
+            setData(documentActions);
+            setTotalItems(totalSize);
+            setRowsPerPage(limit);
+            setPage(start);
+            setIsLoading(false);
+        });
+    }, []);
+
+    useEffect(() => {
+        autoResize();
+    }, [data, isLoading]);
+
+    useEffect(() => {
+        if (!dropDownMenuContainer) autoResize();
+        else dropListAutoResize(dropDownMenuContainer, 47, 20);
+    }, [data]);
+
+    const getSkeletonTemplate = skeleton => (
+        <div className={css.skeleton}>
+                {skeleton}
+                <Skeleton />
+        </div>
+    );
+
+    const getSkeleton = key => {
+        const avatarSkeleton = <Skeleton height={24} width={24} circle />;
+        const skeletonTypes = {
+            title: getSkeletonTemplate(),
+            updatedBy: getSkeletonTemplate(avatarSkeleton),
+            changedBy: getSkeletonTemplate(avatarSkeleton),
+            approvals: avatarSkeleton,
+            lastFinalVersionApprovers: avatarSkeleton,
+            state: getSkeletonTemplate(<Skeleton height={13} width={13} circle />)
+        };
+        return skeletonTypes[key] || <Skeleton />;
+    };
+
+    const headers = {
+        cells: [
+        {key: 'action', content: t('profile.documentActions.action'), isSortable: false},
+        {key: 'content', content: t('profile.documentActions.appearsOn'), isSortable: false},
+        {key: 'dueDate', content: t('profile.documentActions.dueDate'), isSortable: false}]
+    };
+
+    let rows;
+
+    if (!isLoading) {
+       rows = data && data.map(item => ({
+            cells: (() => headers.cells.map(({ key }) => ({
+                    key: item[key],
+                    content: <ReportCell type={key} item={item} size="small" dashboard={false} />
+                })
+            ))()
+        }));
+    } else {
+        rows = Array(data.length).fill({
+            cells: (() => headers.cells.map(({ key }) => ({
+                    key,
+                    content: getSkeleton(key)
+                })
+            ))()
+        });
+    }
+
+    const getPages = () => {
+        const totalPages = Math.ceil(totalItems / rowsPerPage);
+        const pages = [];
+        for (let i = 0; i < totalPages; i++) {
+            pages.push(i + 1);
+        }
+        return pages;
+    };
+
+    const pages = getPages();
+
+    const onChangePage = (newPage) => {
+        getData(newPage - 1, rowsPerPage).then(({documentActions, totalSize, limit, start}) => {
+            setData(documentActions);
+            setTotalItems(totalSize);
+            setRowsPerPage(limit);
+            setPage(start);
+            setIsLoading(false);
+        });
+    };
+
+    const handleOnChange = (selected) => {
+        
+        let selectedTypes = [];
+        selected.map(item =>{
+            if (item.selected === true){
+                selectedTypes.push(item.name)
+            }
+            return selectedTypes
+        })
+
+        getData(newPage - 1, rowsPerPage, selectedTypes.join(',')).then(({documentActions, totalSize, limit, start}) => {
+            setData(documentActions);
+            setTotalItems(totalSize);
+            setRowsPerPage(limit);
+            setPage(start);
+            setIsLoading(false);
+        });
+        
+    }
+
+    const handleOnOpenChange = (container) => {
+        setDropDownMenuContainer(container);
+    };
+
+    return (
+    <div>
+        <h2 className={css.title}>
+            {t('profile.documentActions.title')}
+        </h2>
+        <div className={css.filter}>
+            <Filter 
+                data={data}
+                onChange={handleOnChange}
+                t={t}
+                onOpenChange={handleOnOpenChange}
+            />
+        </div>
+        <DynamicTable
+            head={headers}
+            rows={rows}
+        />
+        {totalItems > rowsPerPage &&
+            <div className={css.pagination}>
+                <Pagination
+                    pages={pages}
+                    onChange={(e, newPage) => onChangePage(newPage)}
+                    selectedIndex={page}
+                />
+            </div>}
+
+        {
+        !isLoading && data.length === 0 &&
+            <div id="no-data"><i>{t('report.nodata')}</i></div>
+        }
+    </div>
+
+    );
+};
+
+DocumentActions.propTypes = {
+    t: PropTypes.func
+};
+
+DocumentActions.defaultProps = {
+    t: s => s
+};
+
+export default translate(DocumentActions);

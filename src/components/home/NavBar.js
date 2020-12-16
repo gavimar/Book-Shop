@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react';
 import {AppBar, Toolbar, Typography, makeStyles, IconButton, Button, TextField} from '@material-ui/core'
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -104,12 +104,21 @@ const Navbar = (props) => {
       setAnchorEl(null);
     };
 
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
     // const books = useSelector(store => store.books.array)
 
 
 
-    const classes = useStyles()
+    const classes = useStyles();
+    const [inputName, setInputName] = useState('');
+
+    const handleChange = (event) => {
+      setInputName(event.target.value);
+    };
+    const counter = useSelector(store => store.books.counter)
+
+
+
     return (
         <div>
 
@@ -166,12 +175,14 @@ const Navbar = (props) => {
                     // onChange={handleSearchTextChange}
                     margin="normal"
                     className={classes.textFieldSearch}
+                    value={inputName} 
+                    onChange={handleChange}
 
                     InputProps={{
                       endAdornment: (
                         <InputAdornment>
                           <IconButton>
-                            <SearchIcon onClick={() => dispatch(getBookAction())} />
+                            <SearchIcon onClick={() => dispatch(getBookAction(inputName))} />
                           </IconButton>
                         </InputAdornment>
                       )
@@ -184,7 +195,7 @@ const Navbar = (props) => {
                 </Button>
                 <Button variant="text" color="inherit">
                     <ShoppingCartIcon/>
-                    Cart
+                    Cart {counter}
                 </Button>
             </Toolbar>
         </AppBar> 

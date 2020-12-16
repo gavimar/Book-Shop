@@ -1,0 +1,108 @@
+import React, { useCallback, useState } from 'react';
+import PropTypes from 'prop-types';
+import { DropdownMenu, DropdownItemCheckbox, DropdownItemGroupCheckbox } from 'workflowskit';
+import { translate } from '../../i18n';
+import { dropListAutoResize } from '../../common/lib/util';
+
+// const Filter = ({ filter, label, data: options, onChange, max, t, onOpenChange }) => {
+    const Filter = ({ onChange, onOpenChange, t}) => {
+
+    const container = useCallback(node => {
+        dropListAutoResize(node, 100, 20);
+        onOpenChange(node);
+    }, []);
+
+    const initOptions = [
+        {
+            label: "Approval",
+            name: "Approval",
+            selected: false
+        },
+        {
+            label: "Task",
+            name: "Task",
+            selected: false
+        }
+    ];
+
+    const [options, setOptions] = useState(initOptions)
+    
+    const getLabel = () => {
+        let value = t('profile.documentActions.filter');
+        if (options.length>0){
+
+        const selectedOptions = options
+            .filter(item => item.selected)
+            .map(option => option.label);
+        if (selectedOptions.length > 0) {
+            value = `${value}: ${selectedOptions.join(', ')}`;
+        }
+        return value;
+    } return value;
+    };
+
+    const toggleCheck = option => options.map(item => {
+        
+        if (item.name === option.name) {
+            return {
+                ...item,
+                selected: !item.selected
+            };
+        } else return item;
+
+        
+    });
+
+
+
+    return (
+        <DropdownMenu
+            triggerType="button"
+            position="bottom left"
+            trigger={getLabel()}
+            shouldFlip={false}
+        >
+            <div ref={container}>
+                <DropdownItemGroupCheckbox>
+                    {options.map(item => {
+                        return (
+                            <DropdownItemCheckbox
+                                href="#"
+                                key={item.name}
+                                id={item.name}
+                                onClick={(evt) => {
+                                    onChange(toggleCheck(item)); 
+                                    
+                                    setOptions(toggleCheck(item));
+                                    evt.preventDefault();
+                                }}
+                                isSelected={item.selected}
+                            >
+                                {item.label}
+                            </DropdownItemCheckbox>
+                        );
+                    })}
+                </DropdownItemGroupCheckbox>
+            </div>
+        </DropdownMenu>
+    );
+};
+
+Filter.propTypes = {
+    filter: PropTypes.string,
+    label: PropTypes.string,
+    propOptions: PropTypes.array,
+    onChange: PropTypes.func,
+    max: PropTypes.number,
+    t: PropTypes.func
+};
+
+Filter.defaultProps = {
+    propOptions: [],
+    label: 'Filter',
+    onChange: () => {},
+    max: 3,
+    t: s => s
+};
+
+export default translate(Filter);

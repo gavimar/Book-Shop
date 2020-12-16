@@ -1,29 +1,61 @@
 import React from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+import { getBookAction,  nextBookAction, previousBookAction, addToCart} from '../../redux/bookDucks';
+import BookItem from './BookItem';
+import { makeStyles } from '@material-ui/core/styles';
+import { FormHelperText } from '@material-ui/core';
 
-
-import {useDispatch, useSelector} from 'react-redux'
-import { getBookAction,  nextBookAction} from '../../redux/bookDucks'
+const styles = makeStyles(theme => ({
+    listWrapper: {
+        margin: '20px',
+        marginRight: '40px',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center'
+        
+    },
+    picture: {
+        height: '40px',
+        width: 'auto'
+    },
+    listItems: {
+        display:'flex',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        flexWrap: 'wrap'
+    }
+}))
 
 const Books = () => {
+
+    const classes = styles()
     const dispatch = useDispatch()
 
     const books = useSelector(store => store.books.array)
 
+    const onClick = () => dispatch(addToCart()) 
+   
+
     return (
         <div>
-            lista de pokemones
-            <button onClick={() => dispatch(getBookAction())}>Get Pokemones</button>
-            <button onClick={() => dispatch(nextBookAction(20))} >Siguiente</button>
-            <ul>
+            <button onClick={() => dispatch(previousBookAction(10))} >Back</button>
+            <button onClick={() => dispatch(nextBookAction(10))} >Next</button>
+            <div className= {classes.listWrapper}>
+            <div className= {classes.listItems}>
                 {
                     books.map(item => (
-                        <li key={item.volumeInfo.title} >{item.volumeInfo.title}</li>
+                        <BookItem
+                            title={item.volumeInfo.title}
+                            picture={item.volumeInfo.imageLinks.smallThumbnail}
+                            onClick={onClick}
+                        />
                     ))
                 }
                 {/* {
                    books.map((value, index) => (<BooksResult key={index} {...value}/>))
                 } */}
-            </ul>
+            </div>
+            </div>
         </div>
     )
 }
